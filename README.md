@@ -1,5 +1,9 @@
 #  Search Server
 
+[Русский язык](README.ru.md)
+
+Search engine for searching documents based on queries. Uses algorithms used in real search engines. Single and multi-threaded operating mode.
+
 1. [Functionalty](#functionality)
 2. [System requirements and build](#requirements)
 3. [Using of SearchServer class](#class)
@@ -7,17 +11,17 @@
 
 <a id="functionality"></a>
 ## Functionality:
-- Поиск документов по ключевым словам с ранжированием документов по TF-IDF
-- Минус-слова - слова, исключающие, содержащие их документы из результата поиска
-- Стоп-слова - слова, не участвующие в поиске
-- Поиск документов в режиме последовательных и парраллельных вычислений
+- Documents search by key words with TF-IDF ranging
+- Minus-words - words to exclude document from search results
+- Stop-words - words not affected to search
+- Single and multythreadig mode
 
-### Ранжирование TF-IDF
-TF - term frequency, «частота термина». Для конкретного слова и конкретного документа это доля, которую данное слово занимает среди всех.
+### TF-IDF ranging
+TF - “term frequency”. For a specific word and a specific document, this is the share that this word occupies among all.
 
-IDF - inverse document frequency, «обратная частота документа» — мера важности слова в документе из коллекции документов. Выступает критерием релевантности документа поисковому запросу. Эта величина — свойство слова, а не документа. Чем в большем количестве документов есть слово, тем ниже IDF.
+IDF - “inverse document frequency” is a measure of the importance of a word in a document from a collection of documents. Acts as a criterion for the relevance of a document to a search query. This value is a property of the word, not the document. The more documents a word appears in, the lower the IDF.
 
-Параметр TF-IDF документа вычислется как сумма произведений всех TF слова на его IDF.
+TF-IDF calculated as suum of all products TF to it's IDF.
 
 <a id="requirements"></a>
 ## System requirements and build
@@ -25,12 +29,13 @@ C++ compiler standard 17 or above.
 
 <a id="class"></a>
 ## Using of SearchServer class
-В конструктор класса передаётся строка со списком стоп-слов, разделённых пробелами либо контейнер со стоп-словами.
 
-Заполенение поискового сервера документами осуществлется с помощью метоода SearchServer::AddDocument. Метод принимает: id документа, его текст, статус, рейтинги.
+SearchServer constructor gets string with stop-words separated by space or container with stop-words.
 
-Поиск документов, осуществляется методом SearchServer::FindTopDocuments. Результат возвращается в виде вектора документов, отсортированных по TF-IDF. Возможна фильтрация результата по статусу или по произвольному предикату, позволяющему состировать по id документа, статусу, рейтингу.
-Метод FindTopDocuments имеет однопоточную и многопоточную версии. Многопоточная версия обеспечивает по меньшей мере на 30% более высокое быстродействие.
+Search server filled with documents with method SearchServer::AddDocument. Method gets: document id, document's text, status, rating.
+
+Documents search runned with method SearchServer::FindTopDocuments. Result is vector of documents, ranged on TF-IDF. It is possible to filter results by document status or filter with predicate by document id, status, rating.
+Method FindTopDocuments could be called in single or multithreding mode. Multithreading version provides at least 30% better speed.
 
 ```c++
 // Stop-words list
@@ -65,7 +70,7 @@ const auto predicate = [](int document_id, DocumentStatus status, int rating){
 const auto found_docs4 = server.FindTopDocuments("brown fluffy cat"s, predicate);
 ```
 <a id="multithreading"></a>
-## Пример поиска в многопоточном режиме
+## Example using multithreading search
 
 ```c++
 #include <execution>
