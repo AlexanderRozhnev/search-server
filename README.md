@@ -8,6 +8,8 @@ Search engine for searching documents based on queries. Uses algorithms used in 
 2. [System requirements and build](#requirements)
 3. [Using of SearchServer class](#class)
 4. [Multithreading](#multithreading)
+5. [Deduplicator](#deduplicator)
+6. [Paginator](#paginator)
 
 <a id="functionality"></a>
 ## Functionality:
@@ -15,6 +17,8 @@ Search engine for searching documents based on queries. Uses algorithms used in 
 - Minus-words - words to exclude document from search results
 - Stop-words - words not affected to search
 - Single and multythreadig mode
+- Deduplicate documents (function `void RemoveDuplicates(SearchServer& search_server);`)
+- Class `Paginator` for paginate results during output.
 
 ### TF-IDF ranging
 TF - “term frequency”. For a specific word and a specific document, this is the share that this word occupies among all.
@@ -87,5 +91,26 @@ void Test(std::string_view mark, const SearchServer& search_server,
         }
     }
     std::cout << total_relevance << std::endl;
+}
+```
+
+<a id="deduplicator"></a>
+## Deduplicator
+Method `void RemoveDuplicates(SearchServer& search_server);` deletes duplicates.  
+Duplicates are considered documents whose sets of words are the same. Frequency matching is not necessary. Word order is not important and stop words are ignored.
+
+<a id="paginator"></a>
+## Paginator
+Example:
+```c++
+// Get search results
+const auto search_results = server.FindTopDocuments("search query"s);
+
+// Use paginator to split on pages
+size_t page_size = 2;
+const auto pages = Paginate(search_results, page_size);
+for (auto page : pages) {
+    cout << page << endl;
+    cout << "Page break"s << endl;
 }
 ```

@@ -6,6 +6,8 @@
 2. [Системные требованя и сборка](#requirements)
 3. [Использование класса SearchServer](#class)
 4. [Привер многопоточного режима](#multithreading)
+5. [Удаление дубликатов](#deduplicator)
+6. [Разбивка на страницы](#paginator)
 
 <a id="functionality"></a>
 ## Функционал:
@@ -13,6 +15,8 @@
 - Минус-слова - слова, исключающие, содержащие их документы из результата поиска
 - Стоп-слова - слова, не участвующие в поиске
 - Поиск документов в режиме последовательных и парраллельных вычислений
+- Дедупликатор документов (функция  `void RemoveDuplicates(SearchServer& search_server);`)
+- Класс Paginator для автоматической разбивки на страницы при печати результатов.
 
 ### Ранжирование TF-IDF
 TF - term frequency, «частота термина». Для конкретного слова и конкретного документа это доля, которую данное слово занимает среди всех.
@@ -84,5 +88,27 @@ void Test(std::string_view mark, const SearchServer& search_server,
         }
     }
     std::cout << total_relevance << std::endl;
+}
+```
+
+<a id="deduplicator"></a>
+## Дедупликатор
+
+Метод `void RemoveDuplicates(SearchServer& search_server);` удалаяет дубликаты.  
+Дубликатами считаются документы, у которых наборы встречающихся слов совпадают. Совпадение частот необязательно. Порядок слов неважен, а стоп-слова игнорируются.  
+
+## Класс Paginator
+Предназначен для разбиения на страницы при выводе.  
+Пример использования:  
+```c++
+// Get search results
+const auto search_results = server.FindTopDocuments("search query"s);
+
+// Use paginator to split on pages
+size_t page_size = 2;
+const auto pages = Paginate(search_results, page_size);
+for (auto page : pages) {
+    cout << page << endl;
+    cout << "Page break"s << endl;
 }
 ```
