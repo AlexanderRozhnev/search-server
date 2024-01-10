@@ -101,7 +101,8 @@ Duplicates are considered documents whose sets of words are the same. Frequency 
 
 <a id="paginator"></a>
 ## Paginator
-Example:
+`Paginator` class used to split output on pages.  
+Example of use:
 ```c++
 // Get search results
 const auto search_results = server.FindTopDocuments("search query"s);
